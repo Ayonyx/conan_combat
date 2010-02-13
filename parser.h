@@ -9,6 +9,7 @@
 #include <dir.h>
 #include <dirent.h>
 #include <sstream>
+#include <windows.h>
 
 using namespace std;
 

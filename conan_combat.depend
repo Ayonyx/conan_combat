@@ -1,11 +1,11 @@
 # depslib dependency file v1.0
-1266055686 source:c:\testing\conan_combat\main.cpp
+1266060948 source:c:\testing\conan_combat\main.cpp
 	"parser.h"
 
-1266056871 source:c:\testing\conan_combat\parser.cpp
+1266060919 source:c:\testing\conan_combat\parser.cpp
 	"parser.h"
 
-1266055559 c:\testing\conan_combat\parser.h
+1266059315 c:\testing\conan_combat\parser.h
 	<iostream>
 	<fstream>
 	<string>
@@ -14,4 +14,5 @@
 	<dir.h>
 	<dirent.h>
 	<sstream>
+	<windows.h>
 

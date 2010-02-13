@@ -5,7 +5,18 @@
 Parser::Parser()
 {
     //eventually I should get this from the registry
-    directory = "C:/Games/Age of Conan";
+    char buffer[256], secondary[256];
+    HKEY reg_default, reg_value;
+    //64bit first
+    if(!RegOpenKeyEx(HKEY_LOCAL_MACHINE, "SOFTWARE\\Wow6432Node\\Funcom\\Age of Conan", 0, KEY_QUERY_VALUE, &reg_default) == ERROR_SUCCESS) {
+        //then default to 32bit
+        RegOpenKeyEx(HKEY_LOCAL_MACHINE, "SOFTWARE\\Funcom\\Age of Conan", 0, KEY_QUERY_VALUE, &reg_default);
+    }
+
+    DWORD size = 255;
+    RegQueryValueEx(reg_default, "LastInstalledClient", NULL, NULL, (LPBYTE)secondary, &size);
+
+    directory = secondary;
 
 
     //get time for log finding!
