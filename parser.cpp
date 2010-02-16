@@ -1,5 +1,9 @@
 #include "parser.h"
 
+int g_sec  = 1;
+int g_min  = 60 * g_sec;
+int g_hour = 60 * g_min;
+int g_day  = 24 * g_hour;
 
 //constructor for the class
 Parser::Parser()
@@ -18,10 +22,25 @@ Parser::Parser()
 
     directory = secondary;
 
+    experience = 0;
+    damage = 0;
+    healing = 0;
+    combatLength = 0;
+    combatTotal = 0;
+    healingTotal = 0;
+
+    //result = FMOD::System_Create(&system);
+    //system->setOutput(FMOD_OUTPUTTYPE_DSOUND);
+    //channel = 0;
+
+    //result = system->init(32, FMOD_INIT_NORMAL, 0);
+    //result = system->createSound("Alarm.mp3", FMOD_HARDWARE, 0, &sound);
 
     //get time for log finding!
     time_t rawtime;
     tm * timeinfo;
+
+    inCombat = false;
 
     time(&rawtime);
     timeinfo = localtime(&rawtime);
@@ -85,35 +104,107 @@ string Parser::GetNewLog()
 
 void Parser::OpenLogFile()
 {
-    int temp = 0, loop = 0;
-    int end[2];
+    int temp = 0, pausetime = 0;
+    bool first = true;
+    int old = 0;
     string line;
+    int experience_gain = 0;
+    starttime = 0;
+
+    string miasma;
 
     while(true) {
-        combatlog.open((directory+"/"+logfile).c_str());
-        combatlog.seekg(0, ios::end);
-        temp = combatlog.tellg();
+        if(base.elapsed() >= 0.5) {
+            combatlog.open((directory+"/"+logfile).c_str());
+            combatlog.seekg(0, ios::end);
+            temp = combatlog.tellg();
 
-        end[loop % 2] = temp;
-
-        if(loop > 0) {
-            if(loop % 2 == 0) {
-                combatlog.seekg(end[1]);
-            } else if(loop % 2 == 1) {
-                combatlog.seekg(end[0]);
+            if(temp == old && runtime.elapsed() - pausetime > 5.0) {
+                inCombat = false;
+                combatLength = 0;
+                combatTotal = 0;
+                healingTotal = 0;
             }
-        } else {
-            combatlog.seekg(0, ios::beg);
-        }
 
-        while(getline(combatlog, line)) {
-            cout << line << endl;
-        }
-        combatlog.clear();
-        combatlog.close();
+            if(temp == old) {
+                continue;
+            }
 
-        //cout << loop << endl;
-        loop++;
+            if(!first) {
+                combatlog.seekg(old);
+            } else {
+                combatlog.seekg(0, ios::beg);
+            }
+
+            old = temp;
+
+            while(getline(combatlog, line)) {
+                if(line.length() > 11) {
+                    LogLine * current = new LogLine(line);
+
+                    if(current->GetExperience() > 0) {
+                        experience += current->GetExperience();
+                    }
+
+                    if(current->GetDamage() > 0) {
+                        damage += current->GetDamage();
+                        if(inCombat == false) {
+                            inCombat = true;
+                            starttime = runtime.elapsed();
+                            combatLength += base.elapsed();
+                            combatTotal += current->GetDamage();
+                        } else {
+                            pausetime = runtime.elapsed();
+                            combatTotal += current->GetDamage();
+                        }
+                    }
+
+                    if(current->GetHealing() > 0) {
+                        healing += current->GetHealing();
+                        if(inCombat) {
+                            healingTotal += current->GetHealing();
+                        }
+                    }
+
+                    /*miasma = current->MatchLine("Hathor-Ka's Miasma hits (\\w*) for (\\d*) poison damage.$");
+                    if(miasma != "") {
+                        cout << "============================================" << endl;
+                        cout << miasma << endl;
+                        cout << "============================================" << endl;
+                    }*/
+
+                    delete &current;
+                }
+            }
+            combatlog.clear();
+            combatlog.close();
+            first = false;
+
+            UpdateDisplay();
+            base.restart();
+        }
     }
+}
 
+void Parser::UpdateDisplay()
+{
+    system("CLS");
+
+    cout << "Experience: " << experience << endl;
+    cout << "Damage:     " << damage << endl;
+    cout << "Healing:    " << healing << endl;
+    cout << "---------------------------------------------------------------------------" << endl;
+    if(inCombat) {
+        printf("Combat:  %0.0f\n", runtime.elapsed() - starttime);
+        printf("DPS: %0.0f\n", combatTotal / (runtime.elapsed() - starttime));
+        printf("HPS: %0.0f\n", healingTotal / (runtime.elapsed() - starttime));
+    } else {
+        cout << "Out of Combat" << endl;
+    }
+    cout << "---------------------------------------------------------------------------" << endl;
+
+    //int _seconds = runtime.elapsed() % g_min;
+    //int _minutes =  runtime.elapsed() / 60;
+    //int _hours   = runtime.elapsed() / 60*60;
+    //printf("Runtime:    %0.0f:%0.0f:%0.0f\n", _hours, _minutes, _seconds);
 }

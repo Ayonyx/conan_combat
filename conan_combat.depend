@@ -1,18 +1,48 @@
 # depslib dependency file v1.0
-1266060948 source:c:\testing\conan_combat\main.cpp
+1266201735 source:c:\testing\conan_combat\main.cpp
 	"parser.h"
 
-1266060919 source:c:\testing\conan_combat\parser.cpp
+1266211101 source:c:\testing\conan_combat\parser.cpp
 	"parser.h"
 
-1266059315 c:\testing\conan_combat\parser.h
+1266211074 c:\testing\conan_combat\parser.h
 	<iostream>
 	<fstream>
 	<string>
+	<stack>
 	<vector>
 	<time.h>
 	<dir.h>
 	<dirent.h>
 	<sstream>
 	<windows.h>
+	<boost/regex.hpp>
+	<boost/timer.hpp>
+	<conio.h>
+	"inc/fmod.hpp"
+	"logline.h"
+
+1266046845 c:\testing\conan_combat\include\regex.h
+	<boost/cregex.hpp>
+
+1266203614 c:\testing\conan_combat\logline.h
+	"parser.h"
+
+1266203621 source:c:\testing\conan_combat\logline.cpp
+	"logline.h"
+	<boost/regex.hpp>
+
+1265913182 c:\testing\conan_combat\inc\fmod.h
+	"fmod_codec.h"
+	"fmod_dsp.h"
+	"fmod_memoryinfo.h"
+
+1265913182 c:\testing\conan_combat\inc\fmod_codec.h
+
+1265913182 c:\testing\conan_combat\inc\fmod_dsp.h
+
+1265913182 c:\testing\conan_combat\inc\fmod_memoryinfo.h
+
+1265912561 c:\testing\conan_combat\inc\fmod.hpp
+	"fmod.h"
 

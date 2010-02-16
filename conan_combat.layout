@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Debug" />
-	<File name="main.cpp" open="1" top="1" tabpos="1">
-		<Cursor position="79" topLine="0" />
+	<File name="logline.cpp" open="1" top="0" tabpos="4">
+		<Cursor position="1867" topLine="44" />
+	</File>
+	<File name="logline.h" open="1" top="0" tabpos="3">
+		<Cursor position="288" topLine="0" />
+	</File>
+	<File name="main.cpp" open="1" top="0" tabpos="1">
+		<Cursor position="59" topLine="0" />
+	</File>
+	<File name="parser.cpp" open="1" top="1" tabpos="2">
+		<Cursor position="4932" topLine="155" />
+	</File>
+	<File name="parser.h" open="1" top="0" tabpos="5">
+		<Cursor position="1296" topLine="0" />
 	</File>
 </CodeBlocks_layout_file>
